@@ -30,7 +30,7 @@ function proxyJsonResponse(requestLib, url, res) {
 }
 
 app.get('/buses.json', function(req, res) {
-  var apiKey = process.env.REALTID2_API_KEY
+  var apiKey = process.env.REALTID2_API_KEY;
   var siteId = 9192;
   var timeWindow = 10;
   var apiUrl = 'https://api.trafiklab.se/sl/realtid2/GetAllDepartureTypes.json/' + siteId + '/' + timeWindow + '?key=' + apiKey;
