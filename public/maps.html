@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBviXm2EqUDSJosBWW-Io5igTFM59Klma8&sensor=false">
+</script>
+
+<script>
+function initialize()
+{
+	geocoder = new google.maps.Geocoder();
+	geocoder.geocode({ 'address': 'Malmo, Sweden' }, function(results, status) {
+   	if (status == google.maps.GeocoderStatus.OK) {
+			var mapProp = {
+				center: results[0].geometry.location,
+				zoom: 12,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			};
+			var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+ 		}
+	});	
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+</head>
+
+<body>
+<div id="googleMap" style="width:500px;height:380px;"></div>
+
+</body>
+</html>

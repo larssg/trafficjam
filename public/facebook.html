@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBviXm2EqUDSJosBWW-Io5igTFM59Klma8&sensor=false">
+    </script>
+
+    <script>
+    var map = null;
+	var mapInit = false;
+    
+    function initialize()
+    {
+		
+        geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ 'address': 'Malmo, Sweden' }, function(results, status) {
+           if (status == google.maps.GeocoderStatus.OK) {
+            var mapProp = {
+              center: results[0].geometry.location,
+              zoom: 8,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+loadlocations();
+           }
+        });  
+    }
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+
+  <body ng-app ng-controller="MainCtrl">
+    <div id="googleMap" style="width:100%;height:900px;"></div>
+    <div><a href="/facebook.json">See JSON here</a> </div>
+ 
+    <script type="text/javascript">
+      var infowindow = new google.maps.InfoWindow();
+      
+      function MainCtrl($scope, $http) {
+  			http = $http;
+		    loadlocations = function() {
+		      $http.get('/facebook.json').success(function(result) {
+		        //console.table(result);
+		        var bounds = new google.maps.LatLngBounds();
+		        for (var i = 0; i < result.length;i++)
+		        {
+		          var coords = result[i].coords;
+		            var myLatlng = new google.maps.LatLng(coords.latitude,coords.longitude);
+		            console.log(result[i].message);
+		            var marker = new google.maps.Marker({
+		              position: myLatlng,
+		              map: map
+		            });
+
+		            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+		              return function() {
+		                infowindow.setContent(result[i].message);
+		                infowindow.open(map, marker);
+		              }
+		            })(marker, i));
+			
+		            bounds.extend(marker.position);
+		        }
+	
+		        	map.fitBounds(bounds);
+			
+		      });
+     
+		    }
+			
+      }
+    </script>
+  </body>
+</html>

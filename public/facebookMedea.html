@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+   
+
+  </head>
+
+  <body ng-app ng-controller="MainCtrl">
+
+    <div class="container">
+    	 <span style="font-size:50pt;font-weight:normal">Number of people who have checked in at <a href="https://www.facebook.com/medeamalmo?fref=ts">Medea on Facebook</a></span><br/>
+		 <span style="font-size:280pt;font-weigh:bold"> {{count}}</span>
+    </div>
+
+    <script type="text/javascript">
+
+      
+      function MainCtrl($scope, $http) {
+  		
+			console.log("hep");
+		    load = function() {
+		      $http.get('/facebookmedea.json').success(function(result) {
+		        //console.table(result);
+				
+	            console.log(result.checkins);
+		      	$scope.count = result.checkins;
+			
+		      });
+     
+		    }
+			load();
+			
+      }
+    </script>
+  </body>
+</html>

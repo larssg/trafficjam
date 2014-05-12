@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	</head>
+
+	<body ng-app ng-controller="MainCtrl">
+		<div class="container">
+			<div ng-show="timeseries.length > 0">
+				<h2>Weather at lat/58.59/lon/16.18/</h2>
+				<div ng-repeat="time in timeseries">
+					<div ng-style="timeStyle(time)"></div>
+				</div>
+			</div>
+			<div ng-hide="timeseries.length > 0">
+				Loading...
+			</div>
+			<div style="clear: both">
+				<a href="http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/58.59/lon/16.18/data.json">See JSON here</a>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			function MainCtrl($scope, $http) {
+				$scope.timeStyle = function(time) {
+					return {
+						height: (time.t * 10) + 'px',
+						width: '10px',
+						'background-color': 'black',
+						float: 'left'
+					}
+				}
+
+				var loadDepartures = function() {
+
+					$http.get('http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/58.59/lon/16.18/data.json').success(function(result) {
+						console.table(result.timeseries)
+
+						if (result.timeseries.length > 0) {
+							$scope.timeseries = result.timeseries;
+						}
+					});
+					setTimeout(loadDepartures, 30000);
+				}
+				loadDepartures();
+			}
+
+		</script>
+	</body>
+</html>

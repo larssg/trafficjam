@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	</head>
+
+	<body ng-app ng-controller="MainCtrl">
+		<div class="container">
+			<div ng-show="lines.length > 0">
+				<h2>Departures from Malmö C</h2>
+				<table class="table table-striped">
+					<tr>
+						<th>Line name</th>
+						<th>Line type</th>
+						<th>Towards</th>
+						<th>Departure</th>
+					</tr>
+					<tr ng-repeat="line in lines">
+						<td>{{ line.name }}</td>
+						<td>{{ line.lineTypeName }}</td>
+						<td>{{ line.towards }}</td>
+						<td>{{ line.time | date:'HH:mm' }}
+					</tr>
+				</table>
+			</div>
+			<div ng-hide="lines.length > 0">
+				Loading...
+			</div>
+			<div><a href="/skane.json">See JSON here</a> </div>
+		</div>
+
+		<script type="text/javascript">
+			function MainCtrl($scope, $http) {
+				var loadDepartures = function() {
+					$http.get('/skane.json?stationid=80000').success(function(result) {
+						if (result.length > 0) {
+							$scope.lines = result;
+						}
+					});
+					setTimeout(loadDepartures, 30000);
+				}
+				loadDepartures();
+			}
+
+		</script>
+	</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	</head>
+
+	<body ng-app ng-controller="MainCtrl">
+		<div class="container">
+			<div ng-show="buses.length > 0">
+				<div class="pull-right">
+					<strong>Stop:</strong> {{ stopAreaName }}
+				</div>
+				<h2>Bus departures</h2>
+				<table class="table table-striped">
+					<tr>
+						<th>Destination</th>
+						<th>Line number</th>
+						<th>Time</th>
+					</tr>
+					<tr ng-repeat="bus in buses">
+						<td>{{ bus.Destination }}</td>
+						<td>{{ bus.LineNumber }}</td>
+						<td>{{ bus.DisplayTime }}</td>
+					</tr>
+				</table>
+			</div>
+			<div ng-hide="buses.length > 0">
+				Loading...
+			</div>
+			 <div><a href="/buses.json">See JSON here</a> </div>
+		</div>
+
+		<script type="text/javascript">
+			function MainCtrl($scope, $http) {
+				var loadDepartures = function() {
+					$http.get('/buses.json').success(function(result) {
+						if (result.Buses.length > 0) {
+							$scope.buses = result.Buses;
+							$scope.stopAreaName = result.Buses[0].StopAreaName;
+						}
+					});
+					setTimeout(loadDepartures, 30000);
+				}
+				loadDepartures();
+			}
+		
+		</script>
+	</body>
+</html>
