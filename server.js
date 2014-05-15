@@ -60,7 +60,7 @@ app.get('/rejseplanen.json?', function(req, res) {
 
   proxyJsonResponse(http, apiUrl, res);
 });
-
+ 
 
 app.get('/facebook.json', function(req, res) {
   var query = "SELECT app_id, coords, author_uid, id, message, page_id, page_type, post_id, tagged_uids, timestamp, type FROM location_post WHERE  author_uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) ORDER BY author_uid";
