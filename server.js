@@ -54,16 +54,19 @@ app.get('/rejseplanen.json?', function(req, res) {
   //var trainid = 008600755;
   var stationid = req.param('stationid');
   var urlSecret = 'http://xmlopen.rejseplanen.dk/bin/rest.exe/'
-  var apiUrl = urlSecret + 'departureBoard?id=' + encodeURIComponent(stationid) + '&date=07.05.14&time=20:02&useBus=0&format=json';
+  var date = new Date();
+  var time = (date.getHours() +2)%24 + ":" + date.getMinutes();
+  var apiUrl = urlSecret + 'departureBoard?id=' + encodeURIComponent(stationid) + '&date=' + moment().zone("0400").zone(-2).format("DD.MM.YY") + '&time=' + moment().zone(-2).format("HH.mm") + '&useBus=0&format=json';
+
   proxyJsonResponse(http, apiUrl, res);
 });
 
 
 app.get('/facebook.json', function(req, res) {
   var query = "SELECT app_id, coords, author_uid, id, message, page_id, page_type, post_id, tagged_uids, timestamp, type FROM location_post WHERE  author_uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) ORDER BY author_uid";
-
+  var tokenSecret = process.env.FB_ACCESS_TOKEN;
   var FB = require('fb');
-  FB.setAccessToken('CAAI5ZAnAg9hQBAL9RZAHyM6RbneUF01ImDQCYWhrk8zwZB2hDoBhZBCcZCZCwzMTjODMuWTAmhO1mOmuUXujOVsZAVMSXVUOd5QuegNZCY4ZAkfZAUjaSYN5qZAsqXfhoXw1TERddTKQq7gYj5VeSnIPgABZC139cd4esMnuHqafZAj5hyE6pT6YvldOG');
+  FB.setAccessToken(tokenSecret);
 
   FB.api('fql', { q: query }, function (fbRes) {
     if(!fbRes || fbRes.error) {
