@@ -54,7 +54,7 @@ app.get('/trains.json', function(req, res) {
 app.get('/rejseplanen.json?', function(req, res) {
   //var trainid = 008600755;
   var stationid = req.param('stationid');
-  var urlSecret = 'http://xmlopen.rejseplanen.dk/bin/rest.exe/'
+  var urlSecret = process.env.REJSEPLANEN_URL_SECRET;
   var date = new Date();
   var time = (date.getHours() +2)%24 + ":" + date.getMinutes();
   var apiUrl = urlSecret + 'departureBoard?id=' + encodeURIComponent(stationid) + '&date=' + moment().zone("0400").zone(-2).format("DD.MM.YY") + '&time=' + moment().zone(-2).format("HH.mm") + '&useBus=0&format=json';
